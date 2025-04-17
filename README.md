@@ -1,70 +1,193 @@
-# Getting Started with Create React App
+Titen Tech Library - Library Management System (ASP.NET Core Backend)
+Overview
+Titen Tech Library is a comprehensive library management system with:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Frontend: React.js with Material-UI (MUI)
 
-## Available Scripts
+Backend: ASP.NET Core Web API with ADO.NET
 
-In the project directory, you can run:
+Database: SQL Server (or other RDBMS)
 
-### `npm start`
+Key Features
+1. Book Management
+Complete CRUD operations for books
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Advanced search functionality
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Book availability tracking
 
-### `npm test`
+2. User Management
+JWT Authentication
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Role-based authorization (User, Admin)
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Borrowing System
+Checkout/return functionality
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Due date tracking
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Fines calculation
 
-### `npm run eject`
+Installation Requirements
+Development Environment
+Prerequisites:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+.NET Core 6.0 SDK
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+SQL Server 2019+
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Node.js (for frontend)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Visual Studio 2022 or VS Code
 
-## Learn More
+Database Setup:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+sql
+Copy
+CREATE DATABASE LibraryDB;
+-- Run the provided SQL scripts to create tables
+Backend Setup:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+bash
+Copy
+cd Library.API
+dotnet restore
+dotnet run
+Frontend Setup:
 
-### Code Splitting
+bash
+Copy
+cd client
+npm install
+npm start
+Project Structure
+Copy
+TitenTechLibrary/
+ ├── Library.API/          # ASP.NET Core Web API
+ ├── Controllers/          # API endpoints
+ ├── Data/                 # ADO.NET data access
+ ├── Models/               # Business models  
+ ├── Services/             # Business logic
+ └── appsettings.json      # Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Configuration
+Backend (appsettings.json)
+json
+Copy
+{
+  "ConnectionStrings": {
+    "LibraryConnection": "Server=.;Database=LibraryDB;Trusted_Connection=True;"
+  },
+  "JwtSettings": {
+    "Secret": "your-secret-key-here",
+    "ExpiryInMinutes": 60
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+Frontend (.env)
+Copy
+REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_ENV=development
+Data Access Layer (ADO.NET Example)
+csharp
+Copy
+// Example Repository
+public class BookRepository
+{
+    private readonly string _connectionString;
+    
+    public BookRepository(IConfiguration config)
+    {
+        _connectionString = config.GetConnectionString("LibraryConnection");
+    }
 
-### Analyzing the Bundle Size
+    public async Task<IEnumerable<Book>> GetAllBooksAsync()
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        
+        return await connection.QueryAsync<Book>(
+            "SELECT * FROM Books WHERE IsActive = 1");
+    }
+}
+API Endpoints
+Endpoint	Method	Description
+/api/books	GET	Get all books
+/api/books/{id}	GET	Get single book
+/api/books/search	GET	Search books
+/api/auth/login	POST	User login
+/api/users/register	POST	Register new user
+/api/borrow/{bookId}	POST	Borrow a book
+Deployment
+Backend Deployment Options:
+IIS Deployment:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Publish to folder
 
-### Making a Progressive Web App
+Configure IIS website
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Set up application pool
 
-### Advanced Configuration
+Docker Container:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+dockerfile
+Copy
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+COPY ./publish .
+ENTRYPOINT ["dotnet", "Library.API.dll"]
+Azure App Service:
 
-### Deployment
+Publish directly from Visual Studio
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Configure connection strings in Azure portal
 
-### `npm run build` fails to minify
+Database Deployment:
+Run SQL scripts on production server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Configure backup strategy
+
+Set up connection string in app settings
+
+Development Workflow
+Clone repository
+
+Restore NuGet packages
+
+Set up database connection
+
+Run API project
+
+Start frontend development server
+
+Implement features using feature branches
+
+Create pull requests for review
+
+Testing
+Unit Tests:
+
+bash
+Copy
+dotnet test
+Integration Tests:
+
+Test API endpoints with Postman
+
+Test database operations
+
+Support
+For technical issues, contact:
+
+Backend Team: backend@titenlib.com
+
+Frontend Team: frontend@titenlib.com
+
+License
+Proprietary - © 2023 Titen Technologies
