@@ -1,0 +1,10 @@
+@import './styles/variables';
+@import './styles/mixins';
+@import './styles/theme';
+
+
+@import '~bootstrap/scss/bootstrap';
+
+body {
+  font-family: $font-family-base;
+}

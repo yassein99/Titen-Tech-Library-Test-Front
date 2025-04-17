@@ -1,24 +1,35 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import store from './stores/store';
+import AppRoutes from './routes/AppRoutes';
+/*import { useEffect } from 'react';
+import { auth } from './utils/auth';
+import { useDispatch } from 'react-redux';
+import { login, logout } from './features/auth/authSlice';
+import { authService } from './api/auth';*/
+
 function App() {
+  /*const dispatch = useDispatch();
+  useEffect(() => {
+    if (auth.isTokenValid()) {
+      authService.getProfile()
+        .then(user => dispatch(login(user)))
+        .catch(() => {
+          auth.removeToken();
+          dispatch(logout());
+        });
+    }
+  }, [dispatch]);*/
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </Provider>
   );
 }
 
