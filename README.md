@@ -190,4 +190,4 @@ Backend Team: backend@titenlib.com
 Frontend Team: frontend@titenlib.com
 
 License
-Proprietary - © 2023 Titen Technologies
+Proprietary - © 2025 Titen Technologies
